@@ -1,6 +1,7 @@
 import json
+from datetime import datetime
 
-class Person:
+class Person():
     
     @staticmethod
     def load_person_data():
@@ -47,6 +48,29 @@ class Person:
         self.lastname = person_dict["lastname"]
         self.picture_path = person_dict["picture_path"]
         self.id = person_dict["id"]
+        self.gender = person_dict["gender"]
+
+    def calc_age(self, date_of_birth):
+        today = datetime.today()
+        self.age = today.year - int(date_of_birth)
+        return self.age
+    
+    def calc_max_heart_rate(self):
+        """Calculate the maximum heart rate based on the age and gender of the person."""
+        if self.gender == 'male':
+            return 220 - self.age
+        elif self.gender == 'female':
+            return 226 - self.age
+        else:
+            raise ValueError("Ungültiges Geschlecht: bitte 'male' oder 'female' angeben.")
+    
+    def load_by_id(self, person_id):
+        """Load a person by their ID from the person database."""
+        person_data = Person.load_person_data()
+        for eintrag in person_data:
+            if eintrag["id"] == person_id:
+                return Person(eintrag)
+        return None
 
 if __name__ == "__main__":
     print("This is a module with some functions to read the person data")
@@ -54,3 +78,14 @@ if __name__ == "__main__":
     person_names = Person.get_person_list(persons)
     print(person_names)
     print(Person.find_person_data_by_name("Huber, Julian"))
+
+    person = Person(persons[0])  # Create a Person object using the first entry in the person data
+    age = person.calc_age(person.date_of_birth)  # Calculate the age
+    print(age)
+
+    max_hr = person.calc_max_heart_rate()  # Calculate the maximum heart rate
+    print(f"Max Heart Rate: {max_hr} bpm")
+
+    id_person = person.load_by_id(person.id)  # Load the person by ID
+    print(id_person)
+    print("id:", id_person.id)

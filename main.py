@@ -2,6 +2,7 @@
 import streamlit as st
 import read_person_data
 import ekgdata
+from person import Person
 #import matplotlib.pyplot as plt
 from PIL import Image
 
@@ -34,8 +35,15 @@ st.session_state.aktuelle_versuchsperson = st.selectbox(
 
 # Name der Versuchsperson
 st.write("Der Name ist: ", st.session_state.aktuelle_versuchsperson) 
+subject_instance = Person(read_person_data.find_person_data_by_name(st.session_state.aktuelle_versuchsperson))
+# Alter der versuchsperson
+subject_age = subject_instance.calc_age(subject_instance.date_of_birth)
+st.write("Das Alter der Versuchsperson ist: ", subject_age)
+# Max Herzrate der Versuchsperson
+subject_max_hr = subject_instance.calc_max_heart_rate()
+st.write("Die maximale Herzrate der Versuchsperson ist: ", subject_max_hr)  
 
-# TODO: Weitere Daten wie Geburtsdatum etc. schön anzeigen
+# TODO: Weitere Daten wie Geburtsdatum etc. scön anzeigen
 
 # Nachdem eine Versuchsperson ausgewählt wurde, die auch in der Datenbank ist
 # Finde den Pfad zur Bilddatei
